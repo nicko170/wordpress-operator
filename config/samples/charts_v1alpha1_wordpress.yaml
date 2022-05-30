@@ -1,0 +1,913 @@
+apiVersion: charts.devlan.io/v1alpha1
+kind: Wordpress
+metadata:
+  name: wordpress-sample
+spec:
+  # Default values copied from <project_dir>/helm-charts/wordpress/values.yaml
+  affinity: {}
+  allowEmptyPassword: true
+  allowOverrideNone: false
+  apacheConfiguration: ""
+  args: []
+  autoscaling:
+    enabled: false
+    maxReplicas: 11
+    minReplicas: 1
+    targetCPU: 50
+    targetMemory: 50
+  clusterDomain: cluster.local
+  command: []
+  common:
+    exampleValue: common-chart
+    global:
+      imagePullSecrets: []
+      imageRegistry: ""
+      storageClass: ""
+  commonAnnotations: {}
+  commonLabels: {}
+  containerPorts:
+    http: 8080
+    https: 8443
+  containerSecurityContext:
+    enabled: true
+    runAsNonRoot: true
+    runAsUser: 1001
+  customHTAccessCM: ""
+  customLivenessProbe: {}
+  customPostInitScripts: {}
+  customReadinessProbe: {}
+  customStartupProbe: {}
+  diagnosticMode:
+    args:
+    - infinity
+    command:
+    - sleep
+    enabled: false
+  existingApacheConfigurationConfigMap: ""
+  existingSecret: ""
+  existingWordPressConfigurationSecret: ""
+  externalCache:
+    host: localhost
+    port: 11211
+  externalDatabase:
+    database: bitnami_wordpress
+    existingSecret: ""
+    host: localhost
+    password: ""
+    port: 3306
+    user: bn_wordpress
+  extraContainerPorts: []
+  extraDeploy: []
+  extraEnvVars: []
+  extraEnvVarsCM: ""
+  extraEnvVarsSecret: ""
+  extraVolumeMounts: []
+  extraVolumes: []
+  fullnameOverride: ""
+  global:
+    imagePullSecrets: []
+    imageRegistry: ""
+    storageClass: ""
+  hostAliases:
+  - hostnames:
+    - status.localhost
+    ip: 127.0.0.1
+  htaccessPersistenceEnabled: false
+  image:
+    debug: false
+    pullPolicy: IfNotPresent
+    pullSecrets: []
+    registry: docker.io
+    repository: bitnami/wordpress
+    tag: 5.9.3-debian-10-r54
+  ingress:
+    annotations: {}
+    apiVersion: ""
+    enabled: false
+    extraHosts: []
+    extraPaths: []
+    extraRules: []
+    extraTls: []
+    hostname: wordpress.local
+    ingressClassName: ""
+    path: /
+    pathType: ImplementationSpecific
+    secrets: []
+    selfSigned: false
+    tls: false
+  initContainers: []
+  kubeVersion: ""
+  lifecycleHooks: {}
+  livenessProbe:
+    enabled: true
+    failureThreshold: 6
+    httpGet:
+      httpHeaders: []
+      path: /wp-admin/install.php
+      port: '{{ .Values.wordpressScheme }}'
+      scheme: '{{ .Values.wordpressScheme | upper }}'
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 5
+  mariadb:
+    architecture: standalone
+    auth:
+      customPasswordFiles: {}
+      database: bitnami_wordpress
+      existingSecret: ""
+      forcePassword: false
+      password: ""
+      replicationPassword: ""
+      replicationUser: replicator
+      rootPassword: ""
+      usePasswordFiles: false
+      username: bn_wordpress
+    clusterDomain: cluster.local
+    common:
+      exampleValue: common-chart
+      global:
+        imagePullSecrets: []
+        imageRegistry: ""
+        storageClass: ""
+    commonAnnotations: {}
+    commonLabels: {}
+    diagnosticMode:
+      args:
+      - infinity
+      command:
+      - sleep
+      enabled: false
+    enabled: true
+    extraDeploy: []
+    fullnameOverride: ""
+    global:
+      imagePullSecrets: []
+      imageRegistry: ""
+      storageClass: ""
+    image:
+      debug: false
+      pullPolicy: IfNotPresent
+      pullSecrets: []
+      registry: docker.io
+      repository: bitnami/mariadb
+      tag: 10.6.8-debian-10-r0
+    initdbScripts: {}
+    initdbScriptsConfigMap: ""
+    kubeVersion: ""
+    metrics:
+      annotations:
+        prometheus.io/port: "9104"
+        prometheus.io/scrape: "true"
+      containerSecurityContext:
+        enabled: false
+      enabled: false
+      extraArgs:
+        primary: []
+        secondary: []
+      image:
+        pullPolicy: IfNotPresent
+        pullSecrets: []
+        registry: docker.io
+        repository: bitnami/mysqld-exporter
+        tag: 0.14.0-debian-10-r75
+      livenessProbe:
+        enabled: true
+        failureThreshold: 3
+        initialDelaySeconds: 120
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 1
+      prometheusRule:
+        additionalLabels: {}
+        enabled: false
+        namespace: ""
+        rules: []
+      readinessProbe:
+        enabled: true
+        failureThreshold: 3
+        initialDelaySeconds: 30
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 1
+      resources:
+        limits: {}
+        requests: {}
+      serviceMonitor:
+        enabled: false
+        honorLabels: false
+        interval: 30s
+        jobLabel: ""
+        labels: {}
+        metricRelabelings: []
+        namespace: ""
+        relabelings: []
+        scrapeTimeout: ""
+        selector: {}
+    nameOverride: ""
+    networkPolicy:
+      egressRules:
+        customRules: {}
+        denyConnectionsToExternal: false
+      enabled: false
+      ingressRules:
+        primaryAccessOnlyFrom:
+          customRules: {}
+          enabled: false
+          namespaceSelector: {}
+          podSelector: {}
+        secondaryAccessOnlyFrom:
+          customRules: {}
+          enabled: false
+          namespaceSelector: {}
+          podSelector: {}
+      metrics:
+        enabled: false
+        namespaceSelector: {}
+        podSelector: {}
+    primary:
+      affinity: {}
+      args: []
+      command: []
+      configuration: |-
+        [mysqld]
+        skip-name-resolve
+        explicit_defaults_for_timestamp
+        basedir=/opt/bitnami/mariadb
+        plugin_dir=/opt/bitnami/mariadb/plugin
+        port=3306
+        socket=/opt/bitnami/mariadb/tmp/mysql.sock
+        tmpdir=/opt/bitnami/mariadb/tmp
+        max_allowed_packet=16M
+        bind-address=*
+        pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
+        log-error=/opt/bitnami/mariadb/logs/mysqld.log
+        character-set-server=UTF8
+        collation-server=utf8_general_ci
+        slow_query_log=0
+        slow_query_log_file=/opt/bitnami/mariadb/logs/mysqld.log
+        long_query_time=10.0
+  
+        [client]
+        port=3306
+        socket=/opt/bitnami/mariadb/tmp/mysql.sock
+        default-character-set=UTF8
+        plugin_dir=/opt/bitnami/mariadb/plugin
+  
+        [manager]
+        port=3306
+        socket=/opt/bitnami/mariadb/tmp/mysql.sock
+        pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
+      containerSecurityContext:
+        enabled: true
+        runAsNonRoot: true
+        runAsUser: 1001
+      customLivenessProbe: {}
+      customReadinessProbe: {}
+      customStartupProbe: {}
+      existingConfigmap: ""
+      extraEnvVars: []
+      extraEnvVarsCM: ""
+      extraEnvVarsSecret: ""
+      extraFlags: ""
+      extraVolumeMounts: []
+      extraVolumes: []
+      hostAliases: []
+      initContainers: []
+      lifecycleHooks: {}
+      livenessProbe:
+        enabled: true
+        failureThreshold: 3
+        initialDelaySeconds: 120
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 1
+      nodeAffinityPreset:
+        key: ""
+        type: ""
+        values: []
+      nodeSelector: {}
+      pdb:
+        create: false
+        maxUnavailable: ""
+        minAvailable: 1
+      persistence:
+        accessModes:
+        - ReadWriteOnce
+        annotations: {}
+        enabled: true
+        existingClaim: ""
+        selector: {}
+        size: 8Gi
+        storageClass: ""
+        subPath: ""
+      podAffinityPreset: ""
+      podAnnotations: {}
+      podAntiAffinityPreset: soft
+      podLabels: {}
+      podManagementPolicy: ""
+      podSecurityContext:
+        enabled: true
+        fsGroup: 1001
+      priorityClassName: ""
+      readinessProbe:
+        enabled: true
+        failureThreshold: 3
+        initialDelaySeconds: 30
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 1
+      resources:
+        limits: {}
+        requests: {}
+      revisionHistoryLimit: 10
+      rollingUpdatePartition: ""
+      schedulerName: ""
+      service:
+        annotations: {}
+        clusterIP: ""
+        externalTrafficPolicy: Cluster
+        extraPorts: []
+        loadBalancerIP: ""
+        loadBalancerSourceRanges: []
+        nodePorts:
+          mysql: ""
+        ports:
+          mysql: 3306
+        sessionAffinity: None
+        sessionAffinityConfig: {}
+        type: ClusterIP
+      sidecars: []
+      startupProbe:
+        enabled: false
+        failureThreshold: 10
+        initialDelaySeconds: 120
+        periodSeconds: 15
+        successThreshold: 1
+        timeoutSeconds: 5
+      startupWaitOptions: {}
+      tolerations: []
+      topologySpreadConstraints: {}
+      updateStrategy:
+        type: RollingUpdate
+    rbac:
+      create: false
+    schedulerName: ""
+    secondary:
+      affinity: {}
+      args: []
+      command: []
+      configuration: |-
+        [mysqld]
+        skip-name-resolve
+        explicit_defaults_for_timestamp
+        basedir=/opt/bitnami/mariadb
+        port=3306
+        socket=/opt/bitnami/mariadb/tmp/mysql.sock
+        tmpdir=/opt/bitnami/mariadb/tmp
+        max_allowed_packet=16M
+        bind-address=0.0.0.0
+        pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
+        log-error=/opt/bitnami/mariadb/logs/mysqld.log
+        character-set-server=UTF8
+        collation-server=utf8_general_ci
+        slow_query_log=0
+        slow_query_log_file=/opt/bitnami/mariadb/logs/mysqld.log
+        long_query_time=10.0
+  
+        [client]
+        port=3306
+        socket=/opt/bitnami/mariadb/tmp/mysql.sock
+        default-character-set=UTF8
+  
+        [manager]
+        port=3306
+        socket=/opt/bitnami/mariadb/tmp/mysql.sock
+        pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
+      containerSecurityContext:
+        enabled: true
+        runAsNonRoot: true
+        runAsUser: 1001
+      customLivenessProbe: {}
+      customReadinessProbe: {}
+      customStartupProbe: {}
+      existingConfigmap: ""
+      extraEnvVars: []
+      extraEnvVarsCM: ""
+      extraEnvVarsSecret: ""
+      extraFlags: ""
+      extraVolumeMounts: []
+      extraVolumes: []
+      hostAliases: []
+      initContainers: []
+      lifecycleHooks: {}
+      livenessProbe:
+        enabled: true
+        failureThreshold: 3
+        initialDelaySeconds: 120
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 1
+      nodeAffinityPreset:
+        key: ""
+        type: ""
+        values: []
+      nodeSelector: {}
+      pdb:
+        create: false
+        maxUnavailable: ""
+        minAvailable: 1
+      persistence:
+        accessModes:
+        - ReadWriteOnce
+        annotations: {}
+        enabled: true
+        selector: {}
+        size: 8Gi
+        storageClass: ""
+        subPath: ""
+      podAffinityPreset: ""
+      podAnnotations: {}
+      podAntiAffinityPreset: soft
+      podLabels: {}
+      podManagementPolicy: ""
+      podSecurityContext:
+        enabled: true
+        fsGroup: 1001
+      priorityClassName: ""
+      readinessProbe:
+        enabled: true
+        failureThreshold: 3
+        initialDelaySeconds: 30
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 1
+      replicaCount: 1
+      resources:
+        limits: {}
+        requests: {}
+      revisionHistoryLimit: 10
+      rollingUpdatePartition: ""
+      schedulerName: ""
+      service:
+        annotations: {}
+        clusterIP: ""
+        externalTrafficPolicy: Cluster
+        extraPorts: []
+        loadBalancerIP: ""
+        loadBalancerSourceRanges: []
+        nodePorts:
+          mysql: ""
+        ports:
+          mysql: 3306
+        sessionAffinity: None
+        sessionAffinityConfig: {}
+        type: ClusterIP
+      sidecars: []
+      startupProbe:
+        enabled: false
+        failureThreshold: 10
+        initialDelaySeconds: 120
+        periodSeconds: 15
+        successThreshold: 1
+        timeoutSeconds: 5
+      startupWaitOptions: {}
+      tolerations: []
+      topologySpreadConstraints: {}
+      updateStrategy:
+        type: RollingUpdate
+    serviceAccount:
+      annotations: {}
+      automountServiceAccountToken: false
+      create: true
+      name: ""
+    volumePermissions:
+      enabled: false
+      image:
+        pullPolicy: IfNotPresent
+        pullSecrets: []
+        registry: docker.io
+        repository: bitnami/bitnami-shell
+        tag: 10-debian-10-r431
+      resources:
+        limits: {}
+        requests: {}
+  memcached:
+    affinity: {}
+    architecture: standalone
+    args: []
+    auth:
+      enabled: false
+      password: ""
+      username: ""
+    autoscaling:
+      enabled: false
+      maxReplicas: 6
+      minReplicas: 3
+      targetCPU: 50
+      targetMemory: 50
+    clusterDomain: cluster.local
+    command: []
+    common:
+      exampleValue: common-chart
+      global:
+        imagePullSecrets: []
+        imageRegistry: ""
+        storageClass: ""
+    commonAnnotations: {}
+    commonLabels: {}
+    containerPorts:
+      memcached: 11211
+    containerSecurityContext:
+      enabled: true
+      runAsNonRoot: true
+      runAsUser: 1001
+    customLivenessProbe: {}
+    customReadinessProbe: {}
+    customStartupProbe: {}
+    diagnosticMode:
+      args:
+      - infinity
+      command:
+      - sleep
+      enabled: false
+    enabled: false
+    extraDeploy: []
+    extraEnvVars: []
+    extraEnvVarsCM: ""
+    extraEnvVarsSecret: ""
+    extraVolumeMounts: []
+    extraVolumes: []
+    fullnameOverride: ""
+    global:
+      imagePullSecrets: []
+      imageRegistry: ""
+      storageClass: ""
+    hostAliases: []
+    image:
+      debug: false
+      pullPolicy: IfNotPresent
+      pullSecrets: []
+      registry: docker.io
+      repository: bitnami/memcached
+      tag: 1.6.15-debian-10-r50
+    initContainers: []
+    kubeVersion: ""
+    lifecycleHooks: {}
+    livenessProbe:
+      enabled: true
+      failureThreshold: 6
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 5
+    metrics:
+      containerPorts:
+        metrics: 9150
+      customLivenessProbe: {}
+      customReadinessProbe: {}
+      customStartupProbe: {}
+      enabled: false
+      image:
+        pullPolicy: IfNotPresent
+        pullSecrets: []
+        registry: docker.io
+        repository: bitnami/memcached-exporter
+        tag: 0.9.0-debian-10-r393
+      livenessProbe:
+        enabled: true
+        failureThreshold: 3
+        initialDelaySeconds: 15
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 5
+      podAnnotations:
+        prometheus.io/port: '{{ .Values.metrics.containerPorts.metrics }}'
+        prometheus.io/scrape: "true"
+      readinessProbe:
+        enabled: true
+        failureThreshold: 3
+        initialDelaySeconds: 5
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 3
+      resources:
+        limits: {}
+        requests: {}
+      service:
+        annotations:
+          prometheus.io/port: '{{ .Values.metrics.service.ports.metrics }}'
+          prometheus.io/scrape: "true"
+        clusterIP: ""
+        ports:
+          metrics: 9150
+        sessionAffinity: None
+      serviceMonitor:
+        enabled: false
+        honorLabels: false
+        interval: ""
+        jobLabel: ""
+        labels: {}
+        metricRelabelings: []
+        namespace: ""
+        relabelings: []
+        scrapeTimeout: ""
+        selector: {}
+      startupProbe:
+        enabled: false
+        failureThreshold: 15
+        initialDelaySeconds: 10
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 1
+    nameOverride: ""
+    nodeAffinityPreset:
+      key: ""
+      type: ""
+      values: []
+    nodeSelector: {}
+    pdb:
+      create: false
+      maxUnavailable: 1
+      minAvailable: ""
+    persistence:
+      accessModes:
+      - ReadWriteOnce
+      annotations: {}
+      enabled: false
+      selector: {}
+      size: 8Gi
+      storageClass: ""
+    podAffinityPreset: ""
+    podAnnotations: {}
+    podAntiAffinityPreset: soft
+    podLabels: {}
+    podManagementPolicy: Parallel
+    podSecurityContext:
+      enabled: true
+      fsGroup: 1001
+    priorityClassName: ""
+    readinessProbe:
+      enabled: true
+      failureThreshold: 6
+      initialDelaySeconds: 5
+      periodSeconds: 5
+      successThreshold: 1
+      timeoutSeconds: 3
+    replicaCount: 1
+    resources:
+      limits: {}
+      requests:
+        cpu: 250m
+        memory: 256Mi
+    schedulerName: ""
+    service:
+      annotations: {}
+      clusterIP: ""
+      externalTrafficPolicy: Cluster
+      extraPorts: []
+      loadBalancerIP: ""
+      loadBalancerSourceRanges: []
+      nodePorts:
+        memcached: ""
+      port: 11211
+      ports:
+        memcached: 11211
+      sessionAffinity: None
+      sessionAffinityConfig: {}
+      type: ClusterIP
+    serviceAccount:
+      annotations: {}
+      automountServiceAccountToken: true
+      create: false
+      name: ""
+    sidecars: []
+    startupProbe:
+      enabled: false
+      failureThreshold: 15
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 1
+    terminationGracePeriodSeconds: ""
+    tolerations: []
+    topologySpreadConstraints: {}
+    updateStrategy:
+      rollingUpdate: {}
+      type: RollingUpdate
+    volumePermissions:
+      containerSecurityContext:
+        runAsUser: 0
+      enabled: false
+      image:
+        pullPolicy: IfNotPresent
+        pullSecrets: []
+        registry: docker.io
+        repository: bitnami/bitnami-shell
+        tag: 10-debian-10-r431
+      resources:
+        limits: {}
+        requests: {}
+  metrics:
+    containerPorts:
+      metrics: 9117
+    customLivenessProbe: {}
+    customReadinessProbe: {}
+    customStartupProbe: {}
+    enabled: false
+    image:
+      pullPolicy: IfNotPresent
+      pullSecrets: []
+      registry: docker.io
+      repository: bitnami/apache-exporter
+      tag: 0.11.0-debian-10-r155
+    livenessProbe:
+      enabled: true
+      failureThreshold: 3
+      initialDelaySeconds: 15
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 5
+    readinessProbe:
+      enabled: true
+      failureThreshold: 3
+      initialDelaySeconds: 5
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 3
+    resources:
+      limits: {}
+      requests: {}
+    service:
+      annotations:
+        prometheus.io/port: '{{ .Values.metrics.containerPorts.metrics }}'
+        prometheus.io/scrape: "true"
+      ports:
+        metrics: 9150
+    serviceMonitor:
+      enabled: false
+      honorLabels: false
+      interval: ""
+      jobLabel: ""
+      labels: {}
+      metricRelabelings: []
+      namespace: ""
+      relabelings: []
+      scrapeTimeout: ""
+      selector: {}
+    startupProbe:
+      enabled: false
+      failureThreshold: 15
+      initialDelaySeconds: 10
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 1
+  multisite:
+    enable: false
+    enableNipIoRedirect: false
+    host: ""
+    networkType: subdomain
+  nameOverride: ""
+  networkPolicy:
+    egressRules:
+      customRules: {}
+      denyConnectionsToExternal: false
+    enabled: false
+    ingress:
+      enabled: false
+      namespaceSelector: {}
+      podSelector: {}
+    ingressRules:
+      accessOnlyFrom:
+        enabled: false
+        namespaceSelector: {}
+        podSelector: {}
+      backendOnlyAccessibleByFrontend: false
+      customBackendSelector: {}
+      customRules: {}
+    metrics:
+      enabled: false
+      namespaceSelector: {}
+      podSelector: {}
+  nodeAffinityPreset:
+    key: ""
+    type: ""
+    values: []
+  nodeSelector: {}
+  overrideDatabaseSettings: false
+  pdb:
+    create: false
+    maxUnavailable: ""
+    minAvailable: 1
+  persistence:
+    accessMode: ReadWriteOnce
+    accessModes:
+    - ReadWriteOnce
+    annotations: {}
+    dataSource: {}
+    enabled: true
+    existingClaim: ""
+    selector: {}
+    size: 10Gi
+    storageClass: ""
+  podAffinityPreset: ""
+  podAnnotations: {}
+  podAntiAffinityPreset: soft
+  podLabels: {}
+  podSecurityContext:
+    enabled: true
+    fsGroup: 1001
+  priorityClassName: ""
+  readinessProbe:
+    enabled: true
+    failureThreshold: 6
+    httpGet:
+      httpHeaders: []
+      path: /wp-login.php
+      port: '{{ .Values.wordpressScheme }}'
+      scheme: '{{ .Values.wordpressScheme | upper }}'
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 5
+  replicaCount: 1
+  resources:
+    limits: {}
+    requests:
+      cpu: 300m
+      memory: 512Mi
+  schedulerName: ""
+  service:
+    annotations: {}
+    clusterIP: ""
+    externalTrafficPolicy: Cluster
+    extraPorts: []
+    httpsTargetPort: https
+    loadBalancerIP: ""
+    loadBalancerSourceRanges: []
+    nodePorts:
+      http: ""
+      https: ""
+    ports:
+      http: 80
+      https: 443
+    sessionAffinity: None
+    sessionAffinityConfig: {}
+    type: LoadBalancer
+  serviceAccount:
+    annotations: {}
+    automountServiceAccountToken: true
+    create: false
+    name: ""
+  sidecars: []
+  smtpExistingSecret: ""
+  smtpHost: ""
+  smtpPassword: ""
+  smtpPort: ""
+  smtpProtocol: ""
+  smtpUser: ""
+  startupProbe:
+    enabled: false
+    failureThreshold: 6
+    httpGet:
+      httpHeaders: []
+      path: /wp-login.php
+      port: '{{ .Values.wordpressScheme }}'
+      scheme: '{{ .Values.wordpressScheme | upper }}'
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 5
+  tolerations: []
+  topologySpreadConstraints: {}
+  updateStrategy:
+    rollingUpdate: {}
+    type: RollingUpdate
+  volumePermissions:
+    containerSecurityContext:
+      runAsUser: 0
+    enabled: false
+    image:
+      pullPolicy: IfNotPresent
+      pullSecrets: []
+      registry: docker.io
+      repository: bitnami/bitnami-shell
+      tag: 10-debian-10-r436
+    resources:
+      limits: {}
+      requests: {}
+  wordpressBlogName: User's Blog!
+  wordpressConfiguration: ""
+  wordpressConfigureCache: false
+  wordpressEmail: user@example.com
+  wordpressExtraConfigContent: ""
+  wordpressFirstName: FirstName
+  wordpressLastName: LastName
+  wordpressPassword: ""
+  wordpressPlugins: none
+  wordpressScheme: http
+  wordpressSkipInstall: false
+  wordpressTablePrefix: wp_
+  wordpressUsername: user
+  
+  
